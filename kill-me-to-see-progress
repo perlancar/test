@@ -1,0 +1,32 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Progress::Any;
+
+my $progress = Progress::Any->get_indicator(task => '');
+my $verbose = @ARGV && $ARGV[0] eq '--verbose';
+
+$SIG{USR1} = sub {
+    if ($progress->target) {
+        say sprintf("task progress: %d/%d (%d secs remaining)",
+                    $progress->pos, $progress->target, $progress->remaining);
+    } else {
+        say "task not running";
+    }
+};
+
+my $end = int(20+100*rand());
+$progress->target($end);
+for (1..$end) {
+    sleep 2;
+    $progress->update(pos => $_);
+    if ($verbose) {
+        say sprintf("(verbose) task progress: %d/%d (%d secs remaining)",
+                $_, $end, $progress->remaining);
+    }
+}
+$progress->finish;
+say "Finished";
