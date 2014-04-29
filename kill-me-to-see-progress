@@ -18,6 +18,8 @@ $SIG{USR1} = sub {
     }
 };
 
+say "My pid is $$. Send me a USR1 signal to see progress.";
+
 my $end = int(20+100*rand());
 $progress->target($end);
 for (1..$end) {
