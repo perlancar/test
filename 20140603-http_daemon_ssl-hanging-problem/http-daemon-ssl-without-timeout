@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+use HTTP::Daemon::SSL;
+use HTTP::Status;
+
+# Make sure you have a certs/ directory with "server-cert.pem"
+# and "server-key.pem" in it before running this!
+
+my $d = HTTP::Daemon::SSL->new(
+    LocalPort => 8084,
+    SSL_cert_file => 'server.crt',
+    SSL_key_file => 'server-key.pem',
+    # 2014-06-03 - adding this param does make larger packet (>2048 byte) hang
+    #Timeout => 120,
+) or die;
+print "Please contact me at: <URL:", $d->url, ">\n";
+while (my $c = $d->accept) {
+    while (my $r = $c->get_request) {
+        if ($r->method eq 'GET' and $r->url->path eq "/xyzzy") {
+            # remember, this is *not* recommened practice :-)
+            #$c->send_file_response("/etc/passwd");
+            $c->send_file_response("hello.txt");
+        } else {
+            $c->send_error(RC_FORBIDDEN);
+        }
+    }
+    $c->close;
+    undef($c);
+}

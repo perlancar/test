@@ -1,0 +1,2 @@
+#!/bin/bash
+plackup -s Gepok --https_ports 8084 --ssl_key_file server-key.pem --ssl_cert_file server.crt hello.psgi
