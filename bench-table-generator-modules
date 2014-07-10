@@ -67,11 +67,11 @@ my %modules = (
         my ($table) = @_;
         my $out = "";
         my $exporter = Catmandu::Exporter::Table->new( file => \$out );
-        my $fields = $table->[0]; 
+        my $fields = $table->[0];
         foreach (1..@$table-1) {
             my $row = $table->[$_];
             $exporter->add( {
-                map { $fields->[$_] => $row->[$_] } 1..@$fields-1
+                map { $fields->[$_] => $row->[$_] } 0..@$fields-1
             });
         }
         $exporter->commit;
