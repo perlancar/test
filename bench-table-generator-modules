@@ -51,6 +51,13 @@ my %modules = (
         $t->addRow(@{ $table->[$_] }) for 1..@$table-1;
         "$t";
     },
+    'Text::FormatTable' => sub {
+        my ($table) = @_;
+        my $t = Text::FormatTable->new(join('|', ('l') x @{ $table->[0] }));
+        $t->head(@{ $table->[0] });
+        $t->row(@{ $table->[$_] }) for 1..@$table-1;
+        $t->render;
+    },
     'Text::MarkdownTable' => sub {
         my ($table) = @_;
         my $out = "";
@@ -70,6 +77,10 @@ my %modules = (
         my $t = Text::Table->new(@{ $table->[0] });
         $t->load(@{ $table }[1..@$table-1]);
         $t;
+    },
+    'Text::Table::Tiny' => sub {
+        my ($table) = @_;
+        Text::Table::Tiny::table(rows=>$table, header_row=>1);
     },
     'Text::TabularDisplay' => sub {
         my ($table) = @_;
