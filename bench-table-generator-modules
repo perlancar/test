@@ -51,6 +51,20 @@ my %modules = (
         $t->addRow(@{ $table->[$_] }) for 1..@$table-1;
         "$t";
     },
+    'Text::MarkdownTable' => sub {
+        my ($table) = @_;
+        my $out = "";
+        my $t = Text::MarkdownTable->new(file => \$out);
+        my $fields = $table->[0];
+        foreach (1..@$table-1) {
+            my $row = $table->[$_];
+            $t->add( {
+                map { $fields->[$_] => $row->[$_] } 0..@$fields-1
+            });
+        }
+        $t->done;
+        $out;
+    },
     'Text::Table' => sub {
         my ($table) = @_;
         my $t = Text::Table->new(@{ $table->[0] });
@@ -63,20 +77,6 @@ my %modules = (
         $t->add(@{ $table->[$_] }) for 1..@$table-1;
         $t->render; # doesn't add newline
     },
-    'Catmandu::Exporter::Table' => sub {
-        my ($table) = @_;
-        my $out = "";
-        my $exporter = Catmandu::Exporter::Table->new( file => \$out );
-        my $fields = $table->[0];
-        foreach (1..@$table-1) {
-            my $row = $table->[$_];
-            $exporter->add( {
-                map { $fields->[$_] => $row->[$_] } 0..@$fields-1
-            });
-        }
-        $exporter->commit;
-        $out;
-    }
 );
 
 # show output for each module for small table
