@@ -107,6 +107,6 @@ for my $tn (sort keys %tables) {
     for my $mod (keys %modules) {
         $codes{$mod} = sub { $modules{$mod}->($tables{$tn}) };
     }
-    cmpthese(-1, \%codes);
+    cmpthese(-0.75, \%codes);
     say "";
 }
