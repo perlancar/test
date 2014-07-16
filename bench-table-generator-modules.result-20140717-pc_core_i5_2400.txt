@@ -1,0 +1,125 @@
+# Text::MarkdownTable 0.2.3 now uses per-row-sprintf() technique like
+# Text::Table::Tiny so its gets a speedup.
+
+Text::ANSITable (0.34):
+.--------+--------+--------.
+| col1   | col2   | col3   |
++--------+--------+--------+
+| row1.1 | row1.2 | row1.3 |
+| row2.1 | row2.2 | row2.3 |
+| row3.1 | row3.2 | row3.3 |
+| row4.1 | row4.2 | row4.3 |
+| row5.1 | row5.2 | row5.3 |
+`--------+--------+--------'
+
+Text::ASCIITable (0.20):
+.--------------------------.
+| col1   | col2   | col3   |
++--------+--------+--------+
+| row1.1 | row1.2 | row1.3 |
+| row2.1 | row2.2 | row2.3 |
+| row3.1 | row3.2 | row3.3 |
+| row4.1 | row4.2 | row4.3 |
+| row5.1 | row5.2 | row5.3 |
+'--------+--------+--------'
+
+Text::FormatTable (1.03):
+col1  |col2  |col3
+row1.1|row1.2|row1.3
+row2.1|row2.2|row2.3
+row3.1|row3.2|row3.3
+row4.1|row4.2|row4.3
+row5.1|row5.2|row5.3
+
+Text::MarkdownTable (0.2.3):
+| col1   | col2   | col3   |
+|--------|--------|--------|
+| row1.1 | row1.2 | row1.3 |
+| row2.1 | row2.2 | row2.3 |
+| row3.1 | row3.2 | row3.3 |
+| row4.1 | row4.2 | row4.3 |
+| row5.1 | row5.2 | row5.3 |
+
+Text::Table (1.130):
+col1   col2   col3
+row1.1 row1.2 row1.3
+row2.1 row2.2 row2.3
+row3.1 row3.2 row3.3
+row4.1 row4.2 row4.3
+row5.1 row5.2 row5.3
+
+Text::Table::Tiny ():
++--------+--------+--------+
+| col1   | col2   | col3   |
++--------+--------+--------+
+| row1.1 | row1.2 | row1.3 |
+| row2.1 | row2.2 | row2.3 |
+| row3.1 | row3.2 | row3.3 |
+| row4.1 | row4.2 | row4.3 |
+| row5.1 | row5.2 | row5.3 |
++--------+--------+--------+
+Text::TabularDisplay (1.38):
++--------+--------+--------+
+| col1   | col2   | col3   |
++--------+--------+--------+
+| row1.1 | row1.2 | row1.3 |
+| row2.1 | row2.2 | row2.3 |
+| row3.1 | row3.2 | row3.3 |
+| row4.1 | row4.2 | row4.3 |
+| row5.1 | row5.2 | row5.3 |
++--------+--------+--------+
+
+0tiny(1x1) table:
+                        Rate Text::ANSITable Text::ASCIITable Text::Table Text::MarkdownTable Text::FormatTable Text::TabularDisplay Text::Table::Tiny
+Text::ANSITable       2765/s              --             -63%        -79%                -82%              -85%                 -91%              -96%
+Text::ASCIITable      7565/s            174%               --        -43%                -52%              -60%                 -75%              -90%
+Text::Table          13273/s            380%              75%          --                -15%              -30%                 -56%              -82%
+Text::MarkdownTable  15704/s            468%             108%         18%                  --              -17%                 -47%              -79%
+Text::FormatTable    18973/s            586%             151%         43%                 21%                --                 -37%              -74%
+Text::TabularDisplay 29894/s            981%             295%        125%                 90%               58%                   --              -59%
+Text::Table::Tiny    73309/s           2551%             869%        452%                367%              286%                 145%                --
+
+1small(3x5) table:
+                        Rate Text::ANSITable Text::ASCIITable Text::FormatTable Text::Table Text::MarkdownTable Text::TabularDisplay Text::Table::Tiny
+Text::ANSITable        646/s              --             -63%              -83%        -87%                -91%                 -92%              -98%
+Text::ASCIITable      1744/s            170%               --              -54%        -65%                -76%                 -78%              -95%
+Text::FormatTable     3828/s            492%             119%                --        -22%                -48%                 -51%              -90%
+Text::Table           4917/s            661%             182%               28%          --                -33%                 -37%              -87%
+Text::MarkdownTable   7298/s           1029%             318%               91%         48%                  --                  -6%              -81%
+Text::TabularDisplay  7754/s           1100%             345%              103%         58%                  6%                   --              -79%
+Text::Table::Tiny    37594/s           5716%            2055%              882%        665%                415%                 385%                --
+
+2wide(30x5) table:
+                       Rate Text::ANSITable Text::ASCIITable Text::FormatTable Text::Table Text::TabularDisplay Text::MarkdownTable Text::Table::Tiny
+Text::ANSITable      78.5/s              --             -59%              -81%        -88%                 -94%                -96%              -99%
+Text::ASCIITable      189/s            141%               --              -53%        -72%                 -85%                -91%              -97%
+Text::FormatTable     403/s            413%             113%                --        -41%                 -69%                -82%              -95%
+Text::Table           679/s            766%             259%               69%          --                 -47%                -69%              -91%
+Text::TabularDisplay 1291/s           1545%             583%              221%         90%                   --                -42%              -83%
+Text::MarkdownTable  2207/s           2712%            1067%              448%        225%                  71%                  --              -70%
+Text::Table::Tiny    7473/s           9423%            3851%             1756%       1000%                 479%                239%                --
+
+3long(3x300) table:
+            (warning: too few iterations for a reliable count)
+                       Rate Text::ANSITable Text::ASCIITable Text::FormatTable Text::TabularDisplay Text::MarkdownTable Text::Table Text::Table::Tiny
+Text::ANSITable      16.0/s              --             -60%              -81%                 -91%                -93%        -95%              -99%
+Text::ASCIITable     40.2/s            151%               --              -53%                 -77%                -82%        -86%              -97%
+Text::FormatTable    85.7/s            434%             113%                --                 -50%                -62%        -71%              -94%
+Text::TabularDisplay  173/s            977%             329%              102%                   --                -23%        -42%              -89%
+Text::MarkdownTable   224/s           1294%             456%              161%                  29%                  --        -25%              -86%
+Text::Table           297/s           1753%             639%              247%                  72%                 33%          --              -81%
+Text::Table::Tiny    1554/s           9585%            3762%             1713%                 799%                595%        423%                --
+
+4large(30x300) table:
+            (warning: too few iterations for a reliable count)
+            (warning: too few iterations for a reliable count)
+            (warning: too few iterations for a reliable count)
+                        Rate Text::ANSITable Text::ASCIITable Text::FormatTable Text::TabularDisplay Text::MarkdownTable Text::Table Text::Table::Tiny
+Text::ANSITable       1.77/s              --             -57%              -82%                 -93%                -97%        -98%              -99%
+Text::ASCIITable      4.08/s            131%               --              -59%                 -84%                -92%        -95%              -98%
+Text::FormatTable    10.00/s            465%             145%                --                 -61%                -81%        -88%              -95%
+Text::TabularDisplay  25.9/s           1365%             535%              159%                   --                -52%        -69%              -88%
+Text::MarkdownTable   53.8/s           2942%            1219%              438%                 108%                  --        -35%              -76%
+Text::Table           82.5/s           4561%            1921%              725%                 218%                 53%          --              -63%
+Text::Table::Tiny      221/s          12386%            5314%             2110%                 752%                310%        168%                --
+
