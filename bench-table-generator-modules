@@ -92,8 +92,9 @@ my %modules = (
 
 # show output for each module for small table
 for my $mod (sort keys %modules) {
-    say "$mod:";
+    no strict 'refs';
     load $mod;
+    say "$mod (", ${"$mod\::VERSION"}, "):";
     print $modules{$mod}->($tables{'1small(3x5)'});
     say "";
 }
