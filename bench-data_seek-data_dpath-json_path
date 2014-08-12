@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use Benchmark qw(timethese);
+use Data::Seek;
+use Data::DPath qw(dpath);
+use JSON::Path;
+
+my $data = { map { $_ => {map {$_=>[1..4]} 1..20} } "a".."z" };
+
+timethese(-0.25, {
+
+    dseek => sub { $ds = Data::Seek->new(data=>$data); $ds->search("j.1.\@")->data },
+
+    dseek_cacheobj=>sub{ state $ds=Data::Seek->new(data=>$data); $ds->search("j.1.\@")->data },
+
+    dpath=>sub{ dpath("/j/1/*")->match($data) },
+
+    jpath=>sub{ JSON::Path->new(q[$.j.1.[*]])->values($data) },
+});
