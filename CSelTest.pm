@@ -3,6 +3,9 @@ package CSelTest;
 use 5.020000;
 use strict;
 use warnings;
+no warnings 'uninitialized';
+
+use Data::Dump qw(dump);
 
 our $RE =
     qr{
@@ -53,6 +56,7 @@ our $RE =
                   ((?&ATTR_NAME))
                   (?{
                       push @{ $^R->[1] }, $^N;
+                      print "1 \$_: '$_'\n", "\$^N: ", dump( $^N ), "\n\$^R: ", dump( $^R ), "\n\n";
                       $^R;
                   })
                   (?:
@@ -66,6 +70,7 @@ our $RE =
                           (?&LITERAL_NUMBER)
                           (?{
                               push @{ $^R->[0][1][1] }, $^R->[1];
+                              print "2 \$_: '$_'\n", "\$^N: ", dump( $^N ), "\n\$^R: ", dump( $^R ), "\n\n";
                               $^R->[0];
                           })
                           (?:
@@ -73,6 +78,7 @@ our $RE =
                               (?&LITERAL_NUMBER)
                               (?{
                                   push @{ $^R->[0][1][1] }, $^R->[1];
+                                  print "3 \$_: '$_'\n", "\$^N: ", dump( $^N ), "\n\$^R: ", dump( $^R ), "\n\n";
                                   $^R->[0];
                               })
                           )*
@@ -89,6 +95,7 @@ our $RE =
                           name => $^R->[1][0],
                           (args => $^R->[1][1]) x !!defined($^R->[1][1]),
                       };
+                      print "4 \$_: '$_'\n", "\$^N: ", dump( $^N ), "\n\$^R: ", dump( $^R ), "\n\n";
                       $^R->[0];
                   })
               )
